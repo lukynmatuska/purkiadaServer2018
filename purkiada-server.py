@@ -14,34 +14,11 @@ class User():
         self.action = ""
         self.argv = ""
         self.home = home
-        self.a = "" #k cemu toje? :(
-        self.dirs = []
-        self.dirs.append(self.home)
+        self.answerToUser= "" #k cemu toje? :(
         self.pathList = [self.home] #"""objekt aktuální složky, resp. poslední složky v cestě"""
-        self.getActualDir()
-    
+        
     def __str__(self):
         return self.name
-
-    def getActualDir(self):
-        dirs = self.path.split("/")
-        del dirs[-1]
-        for dirStr in dirs:
-            print("dirStr: {}".format(dirStr))
-            for dirObj in self.home.content:
-                print("dirObj: {}".format(dirObj))
-                if dirStr == str(dirObj):
-                    print("\nTRUE\n{}\n".format(dirObj))
-        print()
-        for dirStr in self.dirs:
-            print("dirStr: {}".format(dirStr))
-            for dirObj in self.home.content:
-                print("dirObj: {}".format(dirObj))
-                if dirStr == str(dirObj):
-                    print("\nTRUE\n{}\n".format(dirObj))
-        
-        print()
-        return self.home#zatim pak zmenit
 
     def get_target_dir(self, directory):
         print("directory.name: {}".format(directory.name))
@@ -55,7 +32,7 @@ class User():
             exit()
 
         if self.action == "test":
-            self.getActualDir()
+            print("test")
 
         if directory.name != path2[-1]:
             for i in directory.files:
@@ -75,15 +52,15 @@ class User():
                 if self.argv == "/":
                     self.dirIndex = 1
                 print("self.path before CD: {}".format(self.path))
-                self.a, self.pathList = directory.cd(self.argv, self.path, self.pathList)
-                print("self.a after CD: {}".format(self.a))
+                self.pathList, self.answerToUser= directory.cd(self.argv, self.path, self.pathList)
+                print("self.answerToUserafter CD: {}".format(self.answerToUser))
                 print("self.pathListafter CD: {}".format(self.pathList))
                 """if self.argv in self.a:
                     self.dirIndex += 1"""
 
             if self.action == "ls":
-                self.a = directory.ls(self.pathList[-1])#self.a)
-                #self.a = directory.ls(dirs[-1])
+                self.answerToUser= directory.ls(self.pathList[-1])#self.a)
+                #self.answerToUser= directory.ls(dirs[-1])
                 
 
     def run(self, action):
@@ -100,7 +77,7 @@ class User():
         #pom = self.a
         #print("self.dirIndex: {}".format(self.dirIndex))
         #print(pom)
-        return self.a #pom
+        return self.answerToUser#pom
     #def 
 
 
@@ -118,17 +95,28 @@ class Directory():  # tvorba složky chyba by neměla být tady
 
     def cd(self, argv, path, pathList):
         if argv == "..":
+            #path2 = ""
+            #for directoryObject in pathList:
+                #path2 += "{}/".format(directoryObject.name)
+            #print("pathLis: {}".format(path2))#List))
+            #print("pathLis: {}".format(pathList))
             dirs = path.split("/")
             del dirs[-1]
+            del pathList[-1]
             if len(dirs) != 1:
                 del dirs[-1]
+                del pathList[-1]
             path = ""
             for directoryName in dirs:
                 path += "{}/".format(directoryName)
-            return path
+            #path2 = ""
+            #for directoryObject in pathList:
+                #path2 += "{}/".format(directoryObject.name)
+            #print("pathLis: {}".format(path2))#List))
+            return pathList, path
         elif argv == "/":
             dirs = path.split("/")
-            return pom2[0] + "/"
+            return pathList[0], pom2[0] + "/"
         else:
             for dir in self.content:
                 if dir.atribute == "directory":
@@ -137,7 +125,7 @@ class Directory():  # tvorba složky chyba by neměla být tady
                         pathList.append(dir)
                         print("pathList: {}".format(pathList))
             print("New path in CD: {}/".format(path))
-            return path, pathList
+            return pathList, path
 
     def lsOld(self, a):
         dir = ""
