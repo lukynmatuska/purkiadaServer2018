@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 # část kodu pro komunikaci se servrem není potřeba teď řešit
 import sys
 import socket
@@ -15,6 +15,33 @@ class User():
         self.argv = ""
         self.home = home
         self.a = "" #k cemu toje? :(
+        self.dirs = []
+        self.dirs.append(self.home)
+        self.pathList = [self.home] #"""objekt aktuální složky, resp. poslední složky v cestě"""
+        self.getActualDir()
+    
+    def __str__(self):
+        return self.name
+
+    def getActualDir(self):
+        dirs = self.path.split("/")
+        del dirs[-1]
+        for dirStr in dirs:
+            print("dirStr: {}".format(dirStr))
+            for dirObj in self.home.content:
+                print("dirObj: {}".format(dirObj))
+                if dirStr == str(dirObj):
+                    print("\nTRUE\n{}\n".format(dirObj))
+        print()
+        for dirStr in self.dirs:
+            print("dirStr: {}".format(dirStr))
+            for dirObj in self.home.content:
+                print("dirObj: {}".format(dirObj))
+                if dirStr == str(dirObj):
+                    print("\nTRUE\n{}\n".format(dirObj))
+        
+        print()
+        return self.home#zatim pak zmenit
 
     def get_target_dir(self, directory):
         print("directory.name: {}".format(directory.name))
@@ -26,6 +53,9 @@ class User():
 
         if self.action == "exit":
             exit()
+
+        if self.action == "test":
+            self.getActualDir()
 
         if directory.name != path2[-1]:
             for i in directory.files:
@@ -44,15 +74,15 @@ class User():
                         self.dirIndex -= 1
                 if self.argv == "/":
                     self.dirIndex = 1
-                self.a = directory.cd(self.argv, self.path)
+                print("self.path before CD: {}".format(self.path))
+                self.a, self.pathList = directory.cd(self.argv, self.path, self.pathList)
+                print("self.a after CD: {}".format(self.a))
+                print("self.pathListafter CD: {}".format(self.pathList))
                 """if self.argv in self.a:
                     self.dirIndex += 1"""
 
             if self.action == "ls":
-                print("self.a: {}".format(self.a))
-                print("self.path: {}".format(self.path))
-                dirs = self.path.split("/")
-                self.a = directory.ls(self.a)
+                self.a = directory.ls(self.pathList[-1])#self.a)
                 #self.a = directory.ls(dirs[-1])
                 
 
@@ -68,7 +98,7 @@ class User():
         self.dirIndex = 0
         self.get_target_dir(self.home)
         #pom = self.a
-        print(self.dirIndex)
+        #print("self.dirIndex: {}".format(self.dirIndex))
         #print(pom)
         return self.a #pom
     #def 
@@ -86,7 +116,7 @@ class Directory():  # tvorba složky chyba by neměla být tady
     def add(self, newContent):
         self.content.append(newContent)
 
-    def cd(self, argv, path):
+    def cd(self, argv, path, pathList):
         if argv == "..":
             dirs = path.split("/")
             del dirs[-1]
@@ -104,7 +134,10 @@ class Directory():  # tvorba složky chyba by neměla být tady
                 if dir.atribute == "directory":
                     if dir.name == argv:
                         path += "{}/".format(argv)
-            return path
+                        pathList.append(dir)
+                        print("pathList: {}".format(pathList))
+            print("New path in CD: {}/".format(path))
+            return path, pathList
 
     def lsOld(self, a):
         dir = ""
@@ -113,11 +146,12 @@ class Directory():  # tvorba složky chyba by neměla být tady
         return dir
 
     def ls(self, lastFolder):#directory):
-        print("lastFolder: {}".format(lastFolder))
+        print("lastFolder: {}".format(lastFolder.name))
         dirs = ""
-        directory = self
-        for content in directory.content:
-            dirs += "{}\n".format(content.name)# + " "
+        #lastFolder = self
+        for content in lastFolder.content:
+            dirs += "{}\n".format(content.name)
+            print("content.name: {}".format(content.name))
         return dirs
 
     def lsLukyn(self):#split path a posledni(slozka) ze seznamu projede cyklem :), pak rekurze
