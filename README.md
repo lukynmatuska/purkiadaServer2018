@@ -7,9 +7,12 @@ http://purkiada.sspbrno.cz/
 TO-DO LIST:
 
 Binary to text                    - @lukynmatuska
+cPanel - web page                 - @lukynmatuska
 
 Permissions                       - @hojang2
+Logs                              - @hojang2
 
 Server to listening (send binary) - skype: dankuj
 
-Logs                              - @hojang2
+
+
