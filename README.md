@@ -4,7 +4,7 @@
   
 
 TO-DO LIST:|<br />                                       | <br />
----|---
+---|---|---
 Binary to string                  | @lukynmatuska<br /> | 25%
 cPanel - web page                 | @lukynmatuska<br /> | 0%
 some random adventure             | @lukynmatuska<br /> | 0%
