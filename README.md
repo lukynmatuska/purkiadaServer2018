@@ -7,4 +7,5 @@ http://purkiada.sspbrno.cz/
 TO-DO LIST:
 
 Binary to text  - @lukynmatuska
+
 Permissions     - @hojang2
