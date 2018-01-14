@@ -6,10 +6,10 @@ http://purkiada.sspbrno.cz/
 
 TO-DO LIST:
 
-Binary to text  - @lukynmatuska
+Binary to text                    - @lukynmatuska
 
-Permissions     - @hojang2
+Permissions                       - @hojang2
 
 Server to listening (send binary) - skype: dankuj
 
-
+Logs                              - @hojang2
