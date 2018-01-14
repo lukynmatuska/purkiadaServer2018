@@ -1,4 +1,5 @@
-# purkiadaServer2018
+# PURKIADA SERVER 2018
+## Enterprise education edition
 Úloha5 na školní soutěž ... stránky soutěže: http://purkiada.sspbrno.cz/ :+1:
 
 ## TO-DO LIST:
