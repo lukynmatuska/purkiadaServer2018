@@ -5,7 +5,7 @@
 
 TO-DO LIST:|<br />
 ---|---
-Binary to text                    | @lukynmatuska<br />
+Binary to string                  | @lukynmatuska<br /> | 25%
 cPanel - web page                 | @lukynmatuska<br />
 some random adventure             | @lukynmatuska<br />
 xlsx table to users               | @lukynmatuska<br />
