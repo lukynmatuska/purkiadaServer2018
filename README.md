@@ -1,6 +1,6 @@
 # PURKIADA SERVER 2018
 ## Enterprise education edition
-Úloha č.5 na soutěž naší školy, která se koná pro studenty 9. tříd ZŠ...více info na stránkách soutěže http://purkiada.sspbrno.cz/.
+Úloha č.5 na soutěž naší školy, která se koná pro studenty 9. tříd ZŠ...více info na stránkách soutěže http://purkiada.sspbrno.cz/ .
 
 ## TO-DO LIST:
 
