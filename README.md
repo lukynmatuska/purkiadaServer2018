@@ -6,14 +6,13 @@ http://purkiada.sspbrno.cz/
 
 TO-DO LIST:
 
-Binary to text                    - @lukynmatuska_
-cPanel - web page                 - @lukynmatuska__
-some random adventure             - @lukynmatuska__
-xlsx table to users               - @lukynmatuska__
-Permissions                       - @hojang2
-Path logs                         - @hojang2
-
-Server to listening (send binary) - skype: dankuj
+Binary to text                    - @lukynmatuska<br />
+cPanel - web page                 - @lukynmatuska<br />
+some random adventure             - @lukynmatuska<br />
+xlsx table to users               - @lukynmatuska<br />
+Permissions                       - @hojang2<br />
+Path logs                         - @hojang2<br />
+Server to listening (send binary) - skype: dankuj<br />
 
 
 
