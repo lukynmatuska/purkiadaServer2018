@@ -6,10 +6,10 @@
 ##TO-DO LIST:
 Action:|User:|Done:
 ---|---|---
-Binary to string                  | @lukynmatuska<br /> | 25%
-cPanel - web page                 | @lukynmatuska<br /> | 0%
-some random adventure             | @lukynmatuska<br /> | 0%
-xlsx table to users               | @lukynmatuska<br /> | 0%
-Permissions                       | @hojang2<br />      | 0%
+Binary to string                  | @lukynmatuska       | 25%
+cPanel - web page                 | @lukynmatuska       | 0%
+some random adventure             | @lukynmatuska       | 0%
+xlsx table to users               | @lukynmatuska       | 0%
+Permissions                       | @hojang2            | 0%
 Path logs                         | @hojang2            | 0%
-Server to listening (send binary) | skype: dankuj       | 0%
+Server to listening (send binary) | skype: live:dygytal | 0%
