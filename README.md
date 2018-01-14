@@ -6,8 +6,8 @@
 
 Action:|User:|Done:
 ---|---|---
-Binary to string                  | @lukynmatuska       | 25%
-cPanel - web page                 | @lukynmatuska       | 0%
+Binary to string                  | @lukynmatuska       | 80%
+cPanel - web page                 | @lukynmatuska       | 25%
 some random adventure             | @lukynmatuska       | 0%
 xlsx table to users               | @lukynmatuska       | 0%
 Permissions                       | @hojang2            | 0%
