@@ -1,7 +1,5 @@
 # purkiadaServer2018
-Ukol na skolni soutez...
-stranky souteze:
-http://purkiada.sspbrno.cz/
+Úloha5 na školní soutěž ... stránky soutěže: http://purkiada.sspbrno.cz/ :+1:
 
   
 
@@ -26,5 +24,18 @@ Permissions                       - @hojang2<br />
 Path logs                         - @hojang2<br />
 Server to listening (send binary) - skype: dankuj<br />
 
-
-
+<table>
+    <tr>
+        <th>Col 1</th>
+        <th>Col 2</th>
+        <th>Col 3</th>
+    </tr>
+    <tr>
+        <td colspan="2">span 2 cols</td>
+        <td rowspan="2">span 2 rows</td>
+    </tr>
+    <tr>
+        <td>stuff</td>
+        <td>stuff</td>
+    </tr>
+</table>​
