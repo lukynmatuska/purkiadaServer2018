@@ -9,3 +9,7 @@ TO-DO LIST:
 Binary to text  - @lukynmatuska
 
 Permissions     - @hojang2
+
+Server to listening (send binary) - skype: dankuj
+
+
