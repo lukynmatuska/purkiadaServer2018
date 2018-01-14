@@ -3,7 +3,7 @@
 
   
 
-TO-DO LIST:|<br />
+<td colspan="2">TO-DO LIST:|<br /></td>
 ---|---
 Binary to text                    | @lukynmatuska<br />
 cPanel - web page                 | @lukynmatuska<br />
