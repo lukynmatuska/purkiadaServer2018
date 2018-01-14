@@ -1,9 +1,7 @@
 # purkiadaServer2018
 Úloha5 na školní soutěž ... stránky soutěže: http://purkiada.sspbrno.cz/ :+1:
 
-  
-
-##TO-DO LIST:
+## TO-DO LIST:
 
 Action:|User:|Done:
 ---|---|---
