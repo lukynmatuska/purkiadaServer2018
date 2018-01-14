@@ -5,7 +5,7 @@ http://purkiada.sspbrno.cz/
 
   
 
-TO-DO LIST:
+TO-DO LIST:|
 ---|---
 Binary to text                    | @lukynmatuska<br />
 cPanel - web page                 | @lukynmatuska<br />
