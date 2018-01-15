@@ -40,6 +40,7 @@ class HtmlPage():
                     hr()
                     if type(self.content) == str:
                         p(self.content)
+                    else:
                         div(self.content)
                         
                     with div(cls="paticka", style="text-alig: center;"):
@@ -82,7 +83,7 @@ class HtmlPage():
         
         
 home = HtmlPage("Home", "Ahoj svete! z Homu", "Home")
-status = HtmlPage("Status", "Ahoj svete! ze Statusu", "Status")
+status = HtmlPage("Status", "Purkiada Server Panel is working!", "Status")
 contact = HtmlPage("Contact", "Ahoj svete! z contact", "Contact")
 about = HtmlPage("About", "Ahoj svete! z about", "About")
 login = HtmlPage("Login", "Ahoj svete! z login", "Login")
@@ -98,7 +99,7 @@ logging.basicConfig(level=logging.DEBUG,
                     )
 def saveIt():
     while True:
-        time.sleep(5)
+        time.sleep(10)
         #home.save()
         status.save()
         #print("Saved at {}".format(time.time()))
@@ -109,6 +110,7 @@ def daemon():
     saveIt()
     while True:
         #home.update()
+        time.sleep(5)
         status.update()
         #print("updated at {}".format(time.time()))
         logging.debug("Updated at {}".format(time.asctime( time.localtime(time.time()) )))
