@@ -57,10 +57,10 @@ class HtmlPage():
         while True:
             try:
                 if self.i == 1:
-                    self.f1 = open("{}.html".format(self.htmlFileName), "w")
+                    self.f1 = open(".\\panel\{}.html".format(self.htmlFileName), "w")
                     #self.i = ""
                 else:
-                    self.f1 = open("{}{}.html".format(self.htmlFileName,self.i), "w")
+                    self.f1 = open(".\\panel\{}{}.html".format(self.htmlFileName,self.i), "w")
                 self.f1.write(str(self.update()))#doc))
                 #f1.write(str(week.offerHtml))#doc))
                 self.f1.close()
