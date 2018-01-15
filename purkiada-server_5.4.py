@@ -23,7 +23,7 @@ class User():
         self.answerToClient = ""  # k cemu toje? :(
         self.pathList = [home]  # """objekt aktuální složky, resp. poslední složky v cestě"""
         self.perrmission = "user"
-        self.admin_pass = "1234"
+        self.admin_pass = "secret message"
         self.acess = False
     def cd(self):
         self.pathList2 = self.path.split("/")
