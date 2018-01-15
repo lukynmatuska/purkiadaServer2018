@@ -7,9 +7,10 @@
 Action:|User:|Done:|<br />
 ---|---|---|---
 Binary to string                  | @lukynmatuska       | 80% | Repair PHP error
-cPanel - web page                 | @lukynmatuska       | 50% | Template and interactingcompleted
 some random adventure             | @lukynmatuska       | 0%  | -
 xlsx table to users               | @lukynmatuska       | 80% | Just update table
+cPanel - web page                 | @lukynmatuska       | 100% | Template and interacting completed
+cPanel - web page - add to server | -> @hojang2         | 0%  | -
 Permissions                       | @hojang2            | 0%  | -
 Path logs                         | @hojang2            | 0%  | -
 Server to listening (send binary) | skype: live:dygytal | 0%  | -
