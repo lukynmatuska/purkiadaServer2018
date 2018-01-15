@@ -4,8 +4,8 @@
 
 ## TO-DO LIST:
 
-Action:|User:|Done:
----|---|---
+Action:|User:|Done:|<br />
+---|---|---|---
 Binary to string                  | @lukynmatuska       | 80% | Repair PHP error
 cPanel - web page                 | @lukynmatuska       | 50% | Template and interactingcompleted
 some random adventure             | @lukynmatuska       | 0%  | -
