@@ -3,12 +3,24 @@ import sys
 import socket
 import threading
 import time
+import loadTable
+import purkiadaServePanel
+
+#import dominate as dominate
+#from dominate.tags import *
 
 path = "home/"  # ukazatel kde jsem v jaké složce
-users_file = open("users.txt", "r+")
+try:
+    users_file = open("users.txt", "r+")
+except:
+    users_file = open("users.txt", "w")
+    users_file.write("admin-admin")
+    users_file.write("user-1234")
 user_names = users_file.readlines()
 users_file.close()
-print(user_names)
+print("From users.txt: {}".format(user_names))
+print("{}".format(loadTable.users))
+connectedUsers = []
 
 class User():
 
@@ -184,7 +196,7 @@ soc = socket.socket()
 if len(sys.argv) > 1:
     soc.bind(("0.0.0.0", int(sys.argv[1])))
 else:
-    soc.bind(("0.0.0.0", 9800))
+    soc.bind(("0.0.0.0", 9600))
 name = soc.getsockname()
 print(name)
 soc.listen(1)
@@ -210,7 +222,7 @@ banner = r"""
  |  ___| | | | '__| |/ | |/ _` |/ _` |/ _` |   / /| | | | |> _ <
  | |   | |_| | |  |   <| | (_| | (_| | (_| |  / /_| |_| | | (_) |
  |_|    \__,_|_|  |_|\_|_|\__,_|\__,_|\__,_| |____|\___/|_|\___/
-
+ 
 -----------------------------------------------------------------
 """
 def one_user(c, a):
@@ -221,22 +233,36 @@ def one_user(c, a):
         c.send(path.encode())
 
         #část kodu, která se změní
-        while user.connected == False:
+        #while user.connected == False:
+        while user.connected:
             data = c.recv(1024).decode("utf8")
             user.name = data.split("-")[0]
-            for i in user_names:
-                if data in i:
+            for username in loadTable.users:#user_names:
+                if data in username:
                     c.send("True".encode())
                     user.connected = True
-            if user.connected == False:
+                    #here we must add user to connected users (list)
+                    connectedUsers.append(user)
+                    print(connectedUsers)
+            """for username in loadTable.users:
+                if data in username:
+                    c.send("True".encode())
+                    user.connected = True
+                    #here we must add user to connected users (list)
+                    connectedUsers.append(user)
+                    print(connectedUsers)"""
+            #if user.connected == False:
+            if not user.connected:
                 c.send("False".encode())
 
-
+        
                 
         while True:
             action = c.recv(1024).decode("utf8")
-            userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
-            userLog.write(action+"\n")
+            #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
+            userLog = open(".//usersLogs//{}_Log.txt".format(user.name), "a")
+            #userLog.write(action+"\n")
+            userLog.write("[{}] {}\n".format(time.time(), action))
             userLog.close()
             if action != "disconnect":
                 user.acess = False
@@ -258,6 +284,16 @@ def one_user(c, a):
     except:
         c.close()
 
+def htmlUsers():
+    purkiadaServePanel.status.add(purkiadaServePanel.h3("Active users:"))
+    #purkiadaServePanel.status.content += purkiadaServePanel.h3("Active users:")
+    purkiadaServePanel.status.add(purkiadaServePanel.p(connectedUsers))
+    #purkiadaServePanel.status.content += purkiadaServePanel.p(connectedUsers)
+    purkiadaServePanel.logging.debug("HOTOVO")
+
+#a = threading.Thread(name='htmlUsers', target=htmlUsers)
+#a.setDaemon(True)
+htmlUsers()
 
 while True:
     c, a = soc.accept()

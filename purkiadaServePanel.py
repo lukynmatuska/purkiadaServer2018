@@ -41,6 +41,9 @@ class HtmlPage():
                     if type(self.content) == str:
                         p(self.content)
                         div(self.content)
+                    elif type(self.content) == list:
+                        for i in self.content:
+                            div(i)
                     else:
                         div(self.content)
                         
@@ -81,10 +84,13 @@ class HtmlPage():
                 break
             except:
                 print("Error with saving html file! to C:\\xampp\\htdocs\\purkiadaServer2018\\")
-        
+    def add(self, a):
+        #self.content += "{}".format(a)
+        self.content.append(a)
+        self.update()
         
 home = HtmlPage("Home", "Ahoj svete! z Homu", "Home")
-status = HtmlPage("Status", "Purkiada Server Panel is working!", "Status")
+status = HtmlPage("Status", ["Purkiada Server Panel was started!"], "Status")
 contact = HtmlPage("Contact", "Ahoj svete! z contact", "Contact")
 about = HtmlPage("About", "Ahoj svete! z about", "About")
 login = HtmlPage("Login", "Ahoj svete! z login", "Login")
@@ -106,8 +112,8 @@ def saveIt():
         #print("Saved at {}".format(time.time()))
         logging.debug("Saved at {}".format(time.asctime( time.localtime(time.time()) )))
 
-def daemon():
-    logging.debug('Running')
+def UpdateHtml():
+    logging.debug('Running UpdateHtml')
     saveIt()
     while True:
         #home.update()
@@ -120,7 +126,7 @@ def daemon():
 def deamonStop():
     logging.debug('Exiting')
 
-d = threading.Thread(name='daemon', target=daemon)
+d = threading.Thread(name='UpdateHtml', target=UpdateHtml)
 d.setDaemon(True)
 
 def non_daemon():
