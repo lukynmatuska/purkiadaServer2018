@@ -21,6 +21,7 @@ users_file.close()
 print("From users.txt: {}".format(user_names))
 print("{}".format(loadTable.users))
 connectedUsers = []
+connectedUsersNames = []
 
 class User():
 
@@ -163,7 +164,8 @@ class File():  # to stejné akorát se souborem
     def show_content(self):
         return "File content: {}".format(self.content)
 
-acess_list = ["user", "admin"]
+loadTable.users.append("admin")
+acess_list = loadTable.users#["user", "admin"]
 # vytvářím složky a dávám je do sebe
 users = Directory("users",acess_list)
 data = Directory("data",acess_list)
@@ -234,16 +236,22 @@ def one_user(c, a):
 
         #část kodu, která se změní
         #while user.connected == False:
-        while user.connected:
+        while not user.connected:
+            print("WHILE")
             data = c.recv(1024).decode("utf8")
             user.name = data.split("-")[0]
+            user.pswd = data.split("-")[1]
             for username in loadTable.users:#user_names:
-                if data in username:
+                tmpPswd = loadTable.users.index(username)
+                #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))
+                #print("{}:{}".format(username, loadTable.pswds[tmpPswd]))
+                if user.name == username and loadTable.pswds[tmpPswd] == user.pswd:
                     c.send("True".encode())
                     user.connected = True
                     #here we must add user to connected users (list)
                     connectedUsers.append(user)
-                    print(connectedUsers)
+                    connectedUsersNames.append(user.name)
+                    print(connectedUsersNames)
             """for username in loadTable.users:
                 if data in username:
                     c.send("True".encode())
@@ -259,6 +267,7 @@ def one_user(c, a):
                 
         while True:
             action = c.recv(1024).decode("utf8")
+            print("action: \"{}\"".format(action))
             #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
             userLog = open(".//usersLogs//{}_Log.txt".format(user.name), "a")
             #userLog.write(action+"\n")
@@ -268,7 +277,9 @@ def one_user(c, a):
                 user.acess = False
                 user.answerToClient = "None"
                 answ = user.run(action)
-                if user.acess == True:
+                print(user.acess)
+                #if user.acess == True:
+                if user.acess:
                     c.send("True".encode())
                 else:
                     c.send("False".encode())
@@ -287,7 +298,7 @@ def one_user(c, a):
 def htmlUsers():
     purkiadaServePanel.status.add(purkiadaServePanel.h3("Active users:"))
     #purkiadaServePanel.status.content += purkiadaServePanel.h3("Active users:")
-    purkiadaServePanel.status.add(purkiadaServePanel.p(connectedUsers))
+    purkiadaServePanel.status.add(purkiadaServePanel.p(connectedUsersNames))
     #purkiadaServePanel.status.content += purkiadaServePanel.p(connectedUsers)
     purkiadaServePanel.logging.debug("HOTOVO")
 
