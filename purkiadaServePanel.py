@@ -40,6 +40,7 @@ class HtmlPage():
                     hr()
                     if type(self.content) == str:
                         p(self.content)
+                        div(self.content)
                     else:
                         div(self.content)
                         
