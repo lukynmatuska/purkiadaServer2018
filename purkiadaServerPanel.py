@@ -68,7 +68,7 @@ class HtmlPage():
                 self.f1.write(str(self.update()))#doc))
                 #f1.write(str(week.offerHtml))#doc))
                 self.f1.close()
-                print("\nFILE NAME: {}{}.html".format(self.htmlFileName, self.i))
+                #print("\nFILE NAME: {}{}.html".format(self.htmlFileName, self.i))
                 break
             except:
                 print("Error with saving html file!")
@@ -80,7 +80,7 @@ class HtmlPage():
                 self.f2 = open("C:\\xampp\\htdocs\\purkiadaServer2018\\{}.html".format(self.htmlFileName), "w")
                 self.f2.write(str(self.update()))
                 self.f2.close()
-                print("FILE NAME: C:\\xampp\\htdocs\\purkiadaServer2018\\{}.html".format(self.htmlFileName))
+                #print("FILE NAME: C:\\xampp\\htdocs\\purkiadaServer2018\\{}.html".format(self.htmlFileName))
                 break
             except:
                 print("Error with saving html file! to C:\\xampp\\htdocs\\purkiadaServer2018\\")
@@ -109,24 +109,25 @@ def saveIt():
         time.sleep(10)
         #home.save()
         status.save()
-        #print("Saved at {}".format(time.time()))
-        logging.debug("Saved at {}".format(time.asctime( time.localtime(time.time()) )))
+        logging.debug("HTML saved at {}".format(time.asctime( time.localtime(time.time()) )))
 
 def UpdateHtml():
-    logging.debug('Running UpdateHtml')
-    saveIt()
+    logging.debug('Running...')
     while True:
-        #home.update()
+        #saveIt()#home.update()
         time.sleep(5)
         status.update()
+        logging.debug("HTML updated at {}".format(time.asctime( time.localtime(time.time()) )))
         #print("updated at {}".format(time.time()))
-        logging.debug("Updated at {}".format(time.asctime( time.localtime(time.time()) )))
+        status.save()
+        logging.debug("HTML saved at {}".format(time.asctime( time.localtime(time.time()) )))
+        #print("Saved at {}".format(time.time()))       
 
 #time.sleep(2)
 def deamonStop():
     logging.debug('Exiting')
 
-d = threading.Thread(name='UpdateHtml', target=UpdateHtml)
+d = threading.Thread(name="Server panel", target=UpdateHtml)#UpdateHtml
 d.setDaemon(True)
 
 def non_daemon():

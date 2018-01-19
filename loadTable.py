@@ -11,9 +11,9 @@ data = [[sheet.cell_value(r,c) for c in range(sheet.ncols)] for r in range(sheet
 users = []
 for i in range(1, len(data)):
     users.append(data[i][1])
-print("Users: {}\n".format(users))
+#print("Users: {}\n".format(users))
 
 pswds = []
 for i in range(1, len(data)):
     pswds.append(data[i][2])
-print("Pswds: {}".format(pswds))
+#print("Pswds: {}".format(pswds))

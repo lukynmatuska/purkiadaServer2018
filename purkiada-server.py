@@ -3,23 +3,30 @@ import sys
 import socket
 import threading
 import time
+import logging
+
 import loadTable
-import purkiadaServePanel
+import purkiadaServerPanel
 
 #import dominate as dominate
 #from dominate.tags import *
 
-path = "home/"  # ukazatel kde jsem v jaké složce
-try:
-    users_file = open("users.txt", "r+")
-except:
-    users_file = open("users.txt", "w")
-    users_file.write("admin-admin")
-    users_file.write("user-1234")
-user_names = users_file.readlines()
-users_file.close()
-print("From users.txt: {}".format(user_names))
-print("{}".format(loadTable.users))
+path = "home/"  # "default" ukazatel kde jsem v jaké složce
+while True:
+    try:
+        users_file = open("users.txt", "r+")
+        user_names = users_file.readlines()
+        users_file.close()
+        print("From users.txt: {}".format(user_names))
+        break
+    except:
+        users_file = open("users.txt", "w")
+        users_file.write("admin-admin\n")
+        users_file.write("user-1234")
+        users_file.close()
+
+
+#print("{}".format(loadTable.users))
 connectedUsers = []
 connectedUsersNames = []
 
@@ -200,7 +207,8 @@ if len(sys.argv) > 1:
 else:
     soc.bind(("0.0.0.0", 9600))
 name = soc.getsockname()
-print(name)
+logging.debug("Server started on {}:{}".format(name[0], name[1]))
+#print(name)
 soc.listen(1)
 banner2 = r"""
  _______                    __       __                __                  ______   ______    __    ______
@@ -237,7 +245,7 @@ def one_user(c, a):
         #část kodu, která se změní
         #while user.connected == False:
         while not user.connected:
-            print("WHILE")
+            #print("WHILE")
             data = c.recv(1024).decode("utf8")
             user.name = data.split("-")[0]
             user.pswd = data.split("-")[1]
@@ -296,15 +304,15 @@ def one_user(c, a):
         c.close()
 
 def htmlUsers():
-    purkiadaServePanel.status.add(purkiadaServePanel.h3("Active users:"))
-    #purkiadaServePanel.status.content += purkiadaServePanel.h3("Active users:")
-    purkiadaServePanel.status.add(purkiadaServePanel.p(connectedUsersNames))
-    #purkiadaServePanel.status.content += purkiadaServePanel.p(connectedUsers)
-    purkiadaServePanel.logging.debug("HOTOVO")
+    purkiadaServerPanel.status.add(purkiadaServerPanel.h3("Active users:"))
+    #purkiadaServerPanel.status.content += purkiadaServerPanel.h3("Active users:")
+    purkiadaServerPanel.status.add(purkiadaServerPanel.p(connectedUsersNames))
+    #purkiadaServerPanel.status.content += purkiadaServerPanel.p(connectedUsers)
+    purkiadaServerPanel.logging.debug("Successfully started!")
 
-#a = threading.Thread(name='htmlUsers', target=htmlUsers)
-#a.setDaemon(True)
-htmlUsers()
+a = threading.Thread(name="Server panel", target=htmlUsers)
+a.setDaemon(True)
+#htmlUsers()
 
 while True:
     c, a = soc.accept()
