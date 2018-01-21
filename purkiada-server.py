@@ -43,7 +43,7 @@ class User():
         self.answerToClient = ""  # k cemu toje? :(
         self.pathList = [home]  # """objekt aktuální složky, resp. poslední složky v cestě"""
         self.perrmission = "user"
-        self.admin_pass = "secret message"
+        self.admin_pass = "secret_message"
         self.acess = False
     def cd(self):
         self.pathList2 = self.path.split("/")
@@ -56,15 +56,26 @@ class User():
             except:
                 pass
         elif self.argv == "/":
+            self.acess = True
             try:
                 self.pathList = self.pathList[0]
-                self.acess = True
             except:
                 pass
         else:
+            isthere = False
+            for i in self.directory.content:
+                if i.name == self.argv:
+                    isthere == True
+            if isthere == False:
+                self.acess = True
             for dir in self.directory.content:
                 if dir.name == self.argv:
+                    print("soubor je tady")
+                    print(self.perrmission)
+                    print("\n")
+                    print(dir.acess)
                     if self.perrmission in dir.acess:
+                        print("práva souhlasí")
                         self.acess = True
                         if dir.atribute == "directory":
                             self.path += "{}/".format(self.argv)
@@ -172,7 +183,7 @@ class File():  # to stejné akorát se souborem
         return "File content: {}".format(self.content)
 
 loadTable.users.append("admin")
-acess_list = loadTable.users#["user", "admin"]
+acess_list = ["user", "admin"]
 # vytvářím složky a dávám je do sebe
 users = Directory("users",acess_list)
 data = Directory("data",acess_list)
@@ -236,30 +247,31 @@ banner = r"""
 -----------------------------------------------------------------
 """
 def one_user(c, a):
+    #try:
     user = User(path, home, a)
-    try:
-        c.send(banner.encode())
-        time.sleep(0.2)
-        c.send(path.encode())
 
-        #část kodu, která se změní
-        #while user.connected == False:
-        while not user.connected:
-            #print("WHILE")
-            data = c.recv(1024).decode("utf8")
-            user.name = data.split("-")[0]
-            user.pswd = data.split("-")[1]
-            for username in loadTable.users:#user_names:
-                tmpPswd = loadTable.users.index(username)
-                #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))
-                #print("{}:{}".format(username, loadTable.pswds[tmpPswd]))
-                if user.name == username and loadTable.pswds[tmpPswd] == user.pswd:
-                    c.send("True".encode())
-                    user.connected = True
-                    #here we must add user to connected users (list)
-                    connectedUsers.append(user)
-                    connectedUsersNames.append(user.name)
-                    print(connectedUsersNames)
+    c.send(banner.encode())
+    time.sleep(0.2)
+    c.send(path.encode())
+
+    #část kodu, která se změní
+    #while user.connected == False:
+    while not user.connected:
+        #print("WHILE")
+        data = c.recv(1024).decode("utf8")
+        user.name = data.split("-")[0]
+        user.pswd = data.split("-")[1]
+        for username in loadTable.users:#user_names:
+            tmpPswd = loadTable.users.index(username)
+            #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))
+            #print("{}:{}".format(username, loadTable.pswds[tmpPswd]))
+            if user.name == username and loadTable.pswds[tmpPswd] == user.pswd:
+                c.send("True".encode())
+                user.connected = True
+                #here we must add user to connected users (list)
+                connectedUsers.append(user)
+                connectedUsersNames.append(user.name)
+                print(connectedUsersNames)
             """for username in loadTable.users:
                 if data in username:
                     c.send("True".encode())
@@ -268,40 +280,40 @@ def one_user(c, a):
                     connectedUsers.append(user)
                     print(connectedUsers)"""
             #if user.connected == False:
-            if not user.connected:
-                c.send("False".encode())
+        if not user.connected:
+            c.send("False".encode())
 
         
                 
-        while True:
-            action = c.recv(1024).decode("utf8")
-            print("action: \"{}\"".format(action))
-            #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
-            userLog = open(".//usersLogs//{}_Log.txt".format(user.name), "a")
-            #userLog.write(action+"\n")
-            userLog.write("[{}] {}\n".format(time.time(), action))
-            userLog.close()
-            if action != "disconnect":
-                user.acess = False
-                user.answerToClient = "None"
-                answ = user.run(action)
-                print(user.acess)
+    while True:
+        action = c.recv(1024).decode("utf8")
+        print("action: \"{}\"".format(action))
+        #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
+        userLog = open("C:\\Users\\buchmaier.jan\\Desktop\\User_Log\\{}_Log.txt".format(user.name), "a")
+        #userLog.write(action+"\n")
+        userLog.write("[{}] {}\n".format(time.time(), action))
+        userLog.close()
+        if action != "disconnect":
+            user.acess = False
+            user.answerToClient = "None"
+            answ = user.run(action)
+            print(user.acess)
                 #if user.acess == True:
-                if user.acess:
-                    c.send("True".encode())
-                else:
-                    c.send("False".encode())
+            if user.acess:
+                c.send("True".encode())
+            else:
+                c.send("False".encode())
+            time.sleep(0.1)
+            if action != "exit":
+                c.send(answ.encode())
                 time.sleep(0.1)
-                if action != "exit":
-                    c.send(answ.encode())
-                    time.sleep(0.1)
-                else:
-                    c.close()
             else:
                 c.close()
-                break
-    except:
-        c.close()
+        else:
+            c.close()
+            break
+    #except:
+        #c.close()
 
 def htmlUsers():
     purkiadaServerPanel.status.add(purkiadaServerPanel.h3("Active users:"))
