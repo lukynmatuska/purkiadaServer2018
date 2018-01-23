@@ -8,8 +8,6 @@ import logging
 import loadTable
 import purkiadaServerPanel
 
-threading.current_thread().name = "Server"
-
 #import dominate as dominate
 #from dominate.tags import *
 
@@ -19,7 +17,7 @@ while True:
         users_file = open("users.txt", "r+")
         user_names = users_file.readlines()
         users_file.close()
-        #print("From users.txt: {}".format(user_names))
+        print("From users.txt: {}".format(user_names))
         break
     except:
         users_file = open("users.txt", "w")
@@ -72,12 +70,7 @@ class User():
                 self.acess = True
             for dir in self.directory.content:
                 if dir.name == self.argv:
-                    print("soubor je tady")
-                    print(self.perrmission)
-                    print("\n")
-                    print(dir.acess)
                     if self.perrmission in dir.acess:
-                        print("práva souhlasí")
                         self.acess = True
                         if dir.atribute == "directory":
                             self.path += "{}/".format(self.argv)
@@ -123,6 +116,23 @@ class User():
 
         if self.action == "read":
             self.answerToClient = "None such file"
+            isthere = False
+            for i in self.directory.content:
+                if i.name == self.argv:
+                    isthere == True
+            if isthere == False:
+                self.acess = True
+            for dir in self.directory.content:
+                if dir.name == self.argv:
+                    if self.perrmission in dir.acess:
+                        self.acess = True
+                        if dir.atribute == "file":
+                            self.path += "{}/".format(self.argv)
+                            self.answerToClient = i.show_content()
+                    else:
+                        self.acess = False
+            """
+            self.answerToClient = "None such file"
             for i in self.directory.content:
                 if i.name == self.argv:
                     if self.perrmission in i.acess:
@@ -133,6 +143,7 @@ class User():
                     else:
                         self.acess = False
                         self.answerToClient = "None such file"
+        """
         if self.action == "bcad":
             self.acess = True
             if self.argv == self.admin_pass:
@@ -184,16 +195,6 @@ class File():  # to stejné akorát se souborem
     def show_content(self):
         return "File content: {}".format(self.content)
 
-def htmlUsers():
-    #purkiadaServerPanel.status.add(purkiadaServerPanel.h3("Active users:"))
-    #purkiadaServerPanel.status.content += purkiadaServerPanel.h3("Active users:")
-    #purkiadaServerPanel.status.add(purkiadaServerPanel.p(connectedUsersNames))
-    #purkiadaServerPanel.status.content += purkiadaServerPanel.p(connectedUsers)
-    purkiadaServerPanel.logging.debug("Successfully started!")
-
-a = threading.Thread(name="Server panel", target=htmlUsers)
-a.setDaemon(True)
-
 loadTable.users.append("admin")
 acess_list = ["user", "admin"]
 # vytvářím složky a dávám je do sebe
@@ -202,27 +203,34 @@ data = Directory("data",acess_list)
 
 desktop = Directory("desktop",acess_list)
 desktop.add(users)
-
-logs = Directory("logs",["admin"])
-logs.add(users)
-
-root = Directory("root",acess_list)
-root.add(logs)
+message = """       THIS MESSAGE IS FOR NEW MEN IN BLACK ADMIN:
+                    Admin(OLD): If you want to connect to server with passwords
+                    try ip adress 193.165.214.38 and port 9601
+                    If you are a new admin you know password for this server.
+                    PS: Do not show this file to other users."""
+Read_Me = File("read_me.txt", message,acess_list)
+data.add(Read_Me)
+#logs = Directory("logs",["admin"])
+#logs.add(users)
+Secret = File("secret_message.txt", "Well done you have pass the test \n write this text record sheet: m4n 1n bl4ck", ["admin"])
+root = Directory("root",["admin"])
+desktop.add(Secret)
+#root.add(logs)
 root.add(desktop)
-
+#root.add(data)
 bin = Directory("bin",acess_list)
 bin.add(data)
 
 
-f2 = File("text2.txt", "hello world2",acess_list)
+
 
 home = Directory("home",acess_list)
 home.add(bin)
 home.add(root)
-home.add(logs)
-home.add(f2)
+#home.add(logs)
+#home.add(f2)
 
-f1 = File("text.txt", "hello world",acess_list)
+#f1 = File("text.txt", "hello world",acess_list)
 
 soc = socket.socket()
 if len(sys.argv) > 1:
@@ -230,8 +238,7 @@ if len(sys.argv) > 1:
 else:
     soc.bind(("0.0.0.0", 9600))
 name = soc.getsockname()
-#logging.debug("Server started on {}:{}".format(name[0], name[1]))
-logging.debug("Started on {}:{}".format(name[0], name[1]))
+logging.debug("Server started on {}:{}".format(name[0], name[1]))
 #print(name)
 soc.listen(1)
 banner2 = r"""
@@ -260,80 +267,87 @@ banner = r"""
 -----------------------------------------------------------------
 """
 def one_user(c, a):
-    #try:
-    user = User(path, home, a)
+    try:
+        user = User(path, home, a)
 
-    c.send(banner.encode())
-    time.sleep(0.2)
-    c.send(path.encode())
+        c.send(banner.encode())
+        time.sleep(0.2)
+        c.send(path.encode())
 
-    #část kodu, která se změní
-    #while user.connected == False:
-    while not user.connected:
-        #print("WHILE")
-        data = c.recv(1024).decode("utf8")
-        user.name = data.split("-")[0]
-        user.pswd = data.split("-")[1]
-        for username in loadTable.users:#user_names:
-            tmpPswd = loadTable.users.index(username)
-            #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))
-            #print("{}:{}".format(username, loadTable.pswds[tmpPswd]))
-            if user.name == username and loadTable.pswds[tmpPswd] == user.pswd:
-                c.send("True".encode())
-                user.connected = True
-                #here we must add user to connected users (list)
-                connectedUsers.append(user)
-                connectedUsersNames.append(user.name)
-                #purkiadaServerPanel.status.add(purkiadaServerPanel.p(connectedUsersNames))
-                purkiadaServerPanel.status.add(purkiadaServerPanel.p(user.name))
-                #print("Connected users: {}".format(connectedUsersNames))
-                logging.debug("User connected: {}".format(user.name))
-                logging.debug("Connected users: {}".format(connectedUsersNames))
-            """for username in loadTable.users:
-                if data in username:
+        #část kodu, která se změní
+        #while user.connected == False:
+        while not user.connected:
+            #print("WHILE")
+            data = c.recv(1024).decode("utf8")
+            user.name = data.split("-")[0]
+            user.pswd = data.split("-")[1]
+            for username in loadTable.users:#user_names:
+                tmpPswd = loadTable.users.index(username)
+                #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))
+                #print("{}:{}".format(username, loadTable.pswds[tmpPswd]))
+                if user.name == username and loadTable.pswds[tmpPswd] == user.pswd:
                     c.send("True".encode())
                     user.connected = True
                     #here we must add user to connected users (list)
                     connectedUsers.append(user)
-                    print(connectedUsers)"""
-            #if user.connected == False:
-        if not user.connected:
-            c.send("False".encode())
-
-        
-                
-    while True:
-        action = c.recv(1024).decode("utf8")
-        print("action: \"{}\"".format(action))
-        #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
-        userLog = open("C:\\Users\\buchmaier.jan\\Desktop\\User_Log\\{}_Log.txt".format(user.name), "a")
-        #userLog.write(action+"\n")
-        userLog.write("[{}] {}\n".format(time.time(), action))
-        userLog.close()
-        if action != "disconnect":
-            user.acess = False
-            user.answerToClient = "None"
-            answ = user.run(action)
-            print(user.acess)
-                #if user.acess == True:
-            if user.acess:
-                c.send("True".encode())
-            else:
+                    connectedUsersNames.append(user.name)
+                    print(connectedUsersNames)
+                """for username in loadTable.users:
+                    if data in username:
+                        c.send("True".encode())
+                        user.connected = True
+                        #here we must add user to connected users (list)
+                        connectedUsers.append(user)
+                        print(connectedUsers)"""
+                #if user.connected == False:
+            if not user.connected:
                 c.send("False".encode())
-            time.sleep(0.1)
-            if action != "exit":
-                c.send(answ.encode())
+
+
+
+        while True:
+            action = c.recv(1024).decode("utf8")
+            #print("action: \"{}\"".format(action))
+            #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
+            userLog = open("C:\\Users\\buchmaier.jan\\Desktop\\User_Log\\{}_Log.txt".format(user.name), "a")
+            #userLog.write(action+"\n")
+            userLog.write("[{}] {}\n".format(time.time(), action))
+            userLog.close()
+            if action == "read secret_message.txt" and user.path == "home/root/desktop/":
+                file = open("C:\\Users\\buchmaier.jan\\Desktop\\finished_Users.txt", "a")
+                file.write(user.name + " "+ "Done")
+                file.close()
+            if action != "disconnect":
+                user.acess = False
+                user.answerToClient = "None"
+                answ = user.run(action)
+                print(user.acess)
+                    #if user.acess == True:
+                if user.acess:
+                    c.send("True".encode())
+                else:
+                    c.send("False".encode())
                 time.sleep(0.1)
+                if action != "exit":
+                    c.send(answ.encode())
+                    time.sleep(0.1)
+                else:
+                    c.close()
             else:
                 c.close()
-        else:
-            c.close()
-            #purkiadaServerPanel.status.delUser()
-            break
-    #except:
-        #c.close()
+                break
+    except:
+        c.close()
 
+def htmlUsers():
+    purkiadaServerPanel.status.add(purkiadaServerPanel.h3("Active users:"))
+    #purkiadaServerPanel.status.content += purkiadaServerPanel.h3("Active users:")
+    purkiadaServerPanel.status.add(purkiadaServerPanel.p(connectedUsersNames))
+    #purkiadaServerPanel.status.content += purkiadaServerPanel.p(connectedUsers)
+    purkiadaServerPanel.logging.debug("Successfully started!")
 
+a = threading.Thread(name="Server panel", target=htmlUsers)
+a.setDaemon(True)
 #htmlUsers()
 
 while True:

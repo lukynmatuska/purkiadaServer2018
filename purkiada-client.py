@@ -1,6 +1,6 @@
 import socket
 import time
-actions = ["ls","ssh","help","listen","exit","cd", "rm *","disconnect", "read","bcad"]
+actions = ["ls","ssh","help","listen","exit","cd","disconnect", "read","bcad"]
 
 def showHelp():
     print("------------------------------------------------")
@@ -11,7 +11,7 @@ def showHelp():
     print(" cd [directory name] - change working directory")
     print(" cd ..  - go to the upper folder")
     print(" cd /  - go to the start")
-    print(" rm - rename something")
+    #print(" rm - rename something")
     print(" bcad [password]  - will make you admin")
     print(" disconnect - say \"bye!\" to server")
     print(" exit - close this application")
@@ -26,7 +26,7 @@ soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 while True:
     action = input(path+"~$ ")
     action = action.split(" ")
-    if len(action) < 2 and action[0] == "cd":
+    if len(action) < 2 and (action[0] == "cd" or action[0] == "read" or action[0] == "bcad"):
         print("mising argument")
         action=["None","None"]
     if  connect != True:
@@ -127,7 +127,7 @@ while True:
                     print("Permission denied")
             else:
                 print("file name is too long")
-
+        """
         if action[0] == "rm":
             soc.send("rm".encode())
 
@@ -137,6 +137,7 @@ while True:
             else:
                 data = soc.recv(1024).decode("utf8")
                 print("Permission denied")
+        """
         if action[0] == "bcad":
             soc.send((action[0] + " " + action[1]).encode())
             permission = soc.recv(1024).decode("utf8")
