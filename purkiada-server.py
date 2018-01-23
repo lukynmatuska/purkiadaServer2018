@@ -8,6 +8,8 @@ import logging
 import loadTable
 import purkiadaServerPanel
 
+threading.current_thread().name = "Server"
+
 #import dominate as dominate
 #from dominate.tags import *
 
@@ -17,7 +19,7 @@ while True:
         users_file = open("users.txt", "r+")
         user_names = users_file.readlines()
         users_file.close()
-        print("From users.txt: {}".format(user_names))
+        #print("From users.txt: {}".format(user_names))
         break
     except:
         users_file = open("users.txt", "w")
@@ -182,6 +184,16 @@ class File():  # to stejné akorát se souborem
     def show_content(self):
         return "File content: {}".format(self.content)
 
+def htmlUsers():
+    #purkiadaServerPanel.status.add(purkiadaServerPanel.h3("Active users:"))
+    #purkiadaServerPanel.status.content += purkiadaServerPanel.h3("Active users:")
+    #purkiadaServerPanel.status.add(purkiadaServerPanel.p(connectedUsersNames))
+    #purkiadaServerPanel.status.content += purkiadaServerPanel.p(connectedUsers)
+    purkiadaServerPanel.logging.debug("Successfully started!")
+
+a = threading.Thread(name="Server panel", target=htmlUsers)
+a.setDaemon(True)
+
 loadTable.users.append("admin")
 acess_list = ["user", "admin"]
 # vytvářím složky a dávám je do sebe
@@ -218,7 +230,8 @@ if len(sys.argv) > 1:
 else:
     soc.bind(("0.0.0.0", 9600))
 name = soc.getsockname()
-logging.debug("Server started on {}:{}".format(name[0], name[1]))
+#logging.debug("Server started on {}:{}".format(name[0], name[1]))
+logging.debug("Started on {}:{}".format(name[0], name[1]))
 #print(name)
 soc.listen(1)
 banner2 = r"""
@@ -271,7 +284,11 @@ def one_user(c, a):
                 #here we must add user to connected users (list)
                 connectedUsers.append(user)
                 connectedUsersNames.append(user.name)
-                print(connectedUsersNames)
+                #purkiadaServerPanel.status.add(purkiadaServerPanel.p(connectedUsersNames))
+                purkiadaServerPanel.status.add(purkiadaServerPanel.p(user.name))
+                #print("Connected users: {}".format(connectedUsersNames))
+                logging.debug("User connected: {}".format(user.name))
+                logging.debug("Connected users: {}".format(connectedUsersNames))
             """for username in loadTable.users:
                 if data in username:
                     c.send("True".encode())
@@ -311,19 +328,12 @@ def one_user(c, a):
                 c.close()
         else:
             c.close()
+            #purkiadaServerPanel.status.delUser()
             break
     #except:
         #c.close()
 
-def htmlUsers():
-    purkiadaServerPanel.status.add(purkiadaServerPanel.h3("Active users:"))
-    #purkiadaServerPanel.status.content += purkiadaServerPanel.h3("Active users:")
-    purkiadaServerPanel.status.add(purkiadaServerPanel.p(connectedUsersNames))
-    #purkiadaServerPanel.status.content += purkiadaServerPanel.p(connectedUsers)
-    purkiadaServerPanel.logging.debug("Successfully started!")
 
-a = threading.Thread(name="Server panel", target=htmlUsers)
-a.setDaemon(True)
 #htmlUsers()
 
 while True:

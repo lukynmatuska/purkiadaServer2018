@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import dominate
 from dominate.tags import *
+import threading
+import time
+import logging
 
 class HtmlPage():
     """Class for making an ground of MUI HTML pages"""
@@ -12,9 +15,7 @@ class HtmlPage():
         self.menuList = ['Home', 'About', 'Contact', "Login", "Register", "Status"]
         if not self.menuButtonName in self.menuList:
             self.menuList.append(self.menuButtonName)
-        self.content =  [content]
-        if title == "Status":
-            self.content.append(h3("Active users:"))
+        self.content =  content
         self.htmlFileName = filename
 
         self.update()#title, content, filename)
@@ -42,7 +43,7 @@ class HtmlPage():
                     hr()
                     if type(self.content) == str:
                         p(self.content)
-                        #div(self.content)
+                        div(self.content)
                     elif type(self.content) == list:
                         for i in self.content:
                             div(i)
@@ -73,7 +74,7 @@ class HtmlPage():
                 #print("\nFILE NAME: {}{}.html".format(self.htmlFileName, self.i))
                 break
             except:
-                print("Error with saving html file!")
+                logging.debug("Error with saving html file!")#print(
                 self.i += 1
 
         #self.htmlFileName = "index"
@@ -88,33 +89,28 @@ class HtmlPage():
                 #print("FILE NAME: C:\\xampp\\htdocs\\purkiadaServer2018\\{}.html".format(self.htmlFileName))
                 break
             except:
-                print("Error with saving html file! to C:\\xampp\\htdocs\\purkiadaServer2018\\")
+                logging.debug("Error with saving html file! to C:\\xampp\\htdocs\\purkiadaServer2018\\")#print(
     def add(self, a):
         #self.content += "{}".format(a)
         self.content.append(a)
         self.update()
-    def delUser(self, name):#odkontrolovat
-        del self.content[self.content.index(p(name))]
-        #pass
         
 home = HtmlPage("Home", "Ahoj svete! z Homu", "Home")
-status = HtmlPage("Status", "Purkiada Server Panel was started!", "Status")
+status = HtmlPage("Status", ["Purkiada Server Panel was started!"], "Status")
 contact = HtmlPage("Contact", "Ahoj svete! z contact", "Contact")
 about = HtmlPage("About", "Ahoj svete! z about", "About")
 login = HtmlPage("Login", "Ahoj svete! z login", "Login")
 register = HtmlPage("Register", "Ahoj svete! z Register", "Register")
-print(".: Websites creation SUCCES COMPLETED! :.")
+logging.debug(".: Websites creation SUCCES COMPLETED! :.")#print(
 
+"""
 import threading
 import time
-import logging
+import logging"""
+
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(threadName)-10s] %(message)s',
-                    #format='[%(threadName)s] %(message)s',
                     )
-threading.current_thread().name = "Server panel"
-#logging.debug(".: Websites creation SUCCES COMPLETED! :.")
-
 def saveIt():
     while True:
         time.sleep(10)
