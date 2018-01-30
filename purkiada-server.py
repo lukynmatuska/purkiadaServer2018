@@ -26,12 +26,12 @@ while True:
         users_file.close()
 
 
-#print("{}".format(loadTable.users))
+# print("{}".format(loadTable.users))
 connectedUsers = []
 connectedUsersNames = []
 
-class User():
 
+class User():
     def __init__(self, path, home, adress):
         self.name = ""
         self.adress = adress
@@ -43,8 +43,9 @@ class User():
         self.answerToClient = ""  # k cemu toje? :(
         self.pathList = [home]  # """objekt aktuální složky, resp. poslední složky v cestě"""
         self.perrmission = "user"
-        self.admin_pass = "secret_message"
+        self.admin_pass = "neopisuju2018"
         self.acess = False
+
     def cd(self):
         self.pathList2 = self.path.split("/")
         if self.argv == "..":
@@ -84,11 +85,8 @@ class User():
                     else:
                         self.acess = False
 
-
-
     def __str__(self):
         return self.name
-
 
     def use_commands(self):
         try:
@@ -107,7 +105,7 @@ class User():
                     self.path += i.name + "/"
 
             else:
-                self.path = self.pathList.name+"/"
+                self.path = self.pathList.name + "/"
             self.answerToClient = self.path
 
         if self.action == "ls":
@@ -151,6 +149,7 @@ class User():
                 self.perrmission = "admin"
             else:
                 self.answerToClient = "False"
+
     def run(self, action):
         self.action = action
         self.action = self.action.split(" ")
@@ -163,8 +162,9 @@ class User():
         self.use_commands()
         return self.answerToClient  # self.pathList##pom
 
+
 class Directory():  # tvorba složky chyba by neměla být tady
-    def __init__(self, name,acess):
+    def __init__(self, name, acess):
         self.name = name
         self.atribute = "directory"
         self.content = []  # byvaly self.files
@@ -186,7 +186,7 @@ class Directory():  # tvorba složky chyba by neměla být tady
 
 
 class File():  # to stejné akorát se souborem
-    def __init__(self, name, content,acess):
+    def __init__(self, name, content, acess):
         self.atribute = "file"
         self.name = name
         self.content = content
@@ -195,42 +195,41 @@ class File():  # to stejné akorát se souborem
     def show_content(self):
         return "File content: {}".format(self.content)
 
+
 loadTable.users.append("admin")
 acess_list = ["user", "admin"]
 # vytvářím složky a dávám je do sebe
-users = Directory("users",acess_list)
-data = Directory("data",acess_list)
+users = Directory("users", acess_list)
+data = Directory("data", acess_list)
 
-desktop = Directory("desktop",acess_list)
+desktop = Directory("desktop", acess_list)
 desktop.add(users)
 message = """       THIS MESSAGE IS FOR NEW MEN IN BLACK ADMIN:
-                    Admin(OLD): If you want to connect to server with passwords
-                    try ip adress 193.165.214.38 and port 9601
-                    If you are a new admin you know password for this server.
-                    PS: Do not show this file to other users."""
-Read_Me = File("read_me.txt", message,acess_list)
+                        Admin(OLD): If you want to connect to server with passwords
+                        try ip adress 193.165.214.38 and port 9601
+                        If you are a new admin you know password for this server.
+                        PS: Do not show this file to other users."""
+Read_Me = File("read_me.txt", message, acess_list)
 data.add(Read_Me)
-#logs = Directory("logs",["admin"])
-#logs.add(users)
-Secret = File("secret_message.txt", "Well done you have pass the test \n write this text record sheet: m4n 1n bl4ck", ["admin"])
-root = Directory("root",["admin"])
+# logs = Directory("logs",["admin"])
+# logs.add(users)
+Secret = File("secret_message.txt", "Well done you have pass the test \n write this text record sheet: MilujemeCitaceInstrukci",
+              ["admin"])
+root = Directory("root", ["admin"])
 desktop.add(Secret)
-#root.add(logs)
+# root.add(logs)
 root.add(desktop)
-#root.add(data)
-bin = Directory("bin",acess_list)
+# root.add(data)
+bin = Directory("bin", acess_list)
 bin.add(data)
 
-
-
-
-home = Directory("home",acess_list)
+home = Directory("home", acess_list)
 home.add(bin)
 home.add(root)
-#home.add(logs)
-#home.add(f2)
+# home.add(logs)
+# home.add(f2)
 
-#f1 = File("text.txt", "hello world",acess_list)
+# f1 = File("text.txt", "hello world",acess_list)
 
 soc = socket.socket()
 if len(sys.argv) > 1:
@@ -281,11 +280,13 @@ def one_user(c, a):
             data = c.recv(1024).decode("utf8")
             user.name = data.split("-")[0]
             user.pswd = data.split("-")[1]
+            print(loadTable)
             for username in loadTable.users:#user_names:
                 tmpPswd = loadTable.users.index(username)
                 #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))
                 #print("{}:{}".format(username, loadTable.pswds[tmpPswd]))
                 if user.name == username and loadTable.pswds[tmpPswd] == user.pswd:
+                    print("True")
                     c.send("True".encode())
                     user.connected = True
                     #here we must add user to connected users (list)
@@ -311,11 +312,15 @@ def one_user(c, a):
             #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
             userLog = open("C:\\Users\\buchmaier.jan\\Desktop\\User_Log\\{}_Log.txt".format(user.name), "a")
             #userLog.write(action+"\n")
-            userLog.write("[{}] {}\n".format(time.time(), action))
+            userLog.write("[{}] {}: {}\n".format(time.time(),user.path, action))
             userLog.close()
             if action == "read secret_message.txt" and user.path == "home/root/desktop/":
                 file = open("C:\\Users\\buchmaier.jan\\Desktop\\finished_Users.txt", "a")
-                file.write(user.name + " "+ "Done")
+                file.write(user.name + " "+ "Done \n")
+                file.close()
+            if action == "bcad" + " " + user.admin_pass:
+                file = open("C:\\Users\\buchmaier.jan\\Desktop\\finished_Users.txt", "a")
+                file.write(user.name + " "+ "Is now Admin \n")
                 file.close()
             if action != "disconnect":
                 user.acess = False

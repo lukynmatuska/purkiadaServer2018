@@ -1,5 +1,6 @@
 import socket
 import time
+#-*- encoding: utf-8 -*-
 actions = ["ls","ssh","help","listen","exit","cd","disconnect", "read","bcad"]
 
 def showHelp():
@@ -29,41 +30,45 @@ while True:
     if len(action) < 2 and (action[0] == "cd" or action[0] == "read" or action[0] == "bcad"):
         print("mising argument")
         action=["None","None"]
+    if connect == True and (action[0] == "ssh" or action[0] == "listen"):
+        print("You can't connect when you are connected to server")
     if  connect != True:
         soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if action[0] == "ssh":
-            try:
-                adr, port = action[1].split(":")
-                soc.connect((adr,int(port)))
-                connect = True
-                print("new connection with "+adr+" on port: "+str(port))
-                print(soc.recv(4024).decode("utf8"))
-                pom = soc.recv(1024).decode("utf8")
-                for i in range(1):
-                    user_name = input("username: ")
-                    password = input("password: ")
-                    soc.send("{0}-{1}".format(user_name,password).encode())
-                    answ = soc.recv(1024).decode("utf8")
-                    if answ == "True":
-                        print("Welcome user " + user_name)
-                        conected = True
-                        path = pom
-                    else:
-                        connect = False
-                        print("Invalid username or password")
-            except:
-                print("wrong adress or port")
+            if action[1] != "193.165.214.38:9601":
+                try:
+                    adr, port = action[1].split(":")
+                    soc.connect((adr,int(port)))
+                    connect = True
+                    print("new connection with "+adr+" on port: "+str(port))
+                    print(soc.recv(4024).decode("utf8"))
+                    pom = soc.recv(1024).decode("utf8")
+                    for i in range(1):
+                        user_name = input("username: ")
+                        password = input("password: ")
+                        soc.send("{0}-{1}".format(user_name,password).encode())
+                        answ = soc.recv(1024).decode("utf8")
+                        if answ == "True":
+                            print("Welcome user " + user_name)
+                            conected = True
+                            path = pom
+                        else:
+                            connect = False
+                            print("Invalid username or password")
+                except:
+                    print("wrong adress or port")
 
 
         if action[0] == "listen":
-            try:
-                adr, port = action[1].split(":")
-                soc.connect((adr,int(port)))
-                print("server found, listening on port:"+str(port)+"\n")
-                b_data=soc.recv(2048).decode("utf8")
-                print(b_data)
-            except:
-                print("host not found")
+            if action[1] != "193.165.214.38:9600":
+                try:
+                    adr, port = action[1].split(":")
+                    soc.connect((adr,int(port)))
+                    print("server found, listening on port:"+str(port)+"\n")
+                    b_data=soc.recv(2048).decode("utf8")
+                    print(b_data)
+                except:
+                    print("host not found")
     if action[0] == "help":
         showHelp()
     if action[0] == "exit" and connect == True:

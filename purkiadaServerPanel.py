@@ -12,9 +12,7 @@ class HtmlPage():
         self.menuList = ['Home', 'About', 'Contact', "Login", "Register", "Status"]
         if not self.menuButtonName in self.menuList:
             self.menuList.append(self.menuButtonName)
-        self.content =  [content]
-        if title == "Status":
-            self.content.append(h3("Active users:"))
+        self.content =  content
         self.htmlFileName = filename
 
         self.update()#title, content, filename)
@@ -42,7 +40,7 @@ class HtmlPage():
                     hr()
                     if type(self.content) == str:
                         p(self.content)
-                        #div(self.content)
+                        div(self.content)
                     elif type(self.content) == list:
                         for i in self.content:
                             div(i)
@@ -79,10 +77,7 @@ class HtmlPage():
         #self.htmlFileName = "index"
         while True:
             try:
-                if self.htmlFileName == "home" or self.htmlFileName == "Home":
-                    self.f2 = open("C:\\xampp\\htdocs\\purkiadaServer2018\\index.html", "w")
-                else:
-                    self.f2 = open("C:\\xampp\\htdocs\\purkiadaServer2018\\{}.html".format(self.htmlFileName), "w")
+                self.f2 = open("C:\\xampp\\htdocs\\purkiadaServer2018\\{}.html".format(self.htmlFileName), "w")
                 self.f2.write(str(self.update()))
                 self.f2.close()
                 #print("FILE NAME: C:\\xampp\\htdocs\\purkiadaServer2018\\{}.html".format(self.htmlFileName))
@@ -93,12 +88,9 @@ class HtmlPage():
         #self.content += "{}".format(a)
         self.content.append(a)
         self.update()
-    def delUser(self, name):#odkontrolovat
-        del self.content[self.content.index(p(name))]
-        #pass
         
 home = HtmlPage("Home", "Ahoj svete! z Homu", "Home")
-status = HtmlPage("Status", "Purkiada Server Panel was started!", "Status")
+status = HtmlPage("Status", ["Purkiada Server Panel was started!"], "Status")
 contact = HtmlPage("Contact", "Ahoj svete! z contact", "Contact")
 about = HtmlPage("About", "Ahoj svete! z about", "About")
 login = HtmlPage("Login", "Ahoj svete! z login", "Login")
@@ -108,13 +100,10 @@ print(".: Websites creation SUCCES COMPLETED! :.")
 import threading
 import time
 import logging
+
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(threadName)-10s] %(message)s',
-                    #format='[%(threadName)s] %(message)s',
                     )
-threading.current_thread().name = "Server panel"
-#logging.debug(".: Websites creation SUCCES COMPLETED! :.")
-
 def saveIt():
     while True:
         time.sleep(10)
