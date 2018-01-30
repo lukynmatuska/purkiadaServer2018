@@ -115,12 +115,12 @@ def UpdateHtml():
     logging.debug('Running...')
     while True:
         #saveIt()#home.update()
-        time.sleep(5)
+        time.sleep(10)
         status.update()
         logging.debug("HTML updated at {}".format(time.asctime( time.localtime(time.time()) )))
         #print("updated at {}".format(time.time()))
         status.save()
-        logging.debug("HTML saved at {}".format(time.asctime( time.localtime(time.time()) )))
+        logging.debug("HTML saved   at {}".format(time.asctime( time.localtime(time.time()) )))
         #print("Saved at {}".format(time.time()))       
 
 #time.sleep(2)

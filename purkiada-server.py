@@ -17,7 +17,7 @@ while True:
         users_file = open("users.txt", "r+")
         user_names = users_file.readlines()
         users_file.close()
-        print("From users.txt: {}".format(user_names))
+        #print("From users.txt: {}".format(user_names))
         break
     except:
         users_file = open("users.txt", "w")
@@ -32,6 +32,25 @@ connectedUsersNames = []
 
 
 class User():
+    def scoreLoad(self):
+        logging.debug("Loading score for user {}".format(self.name))
+        try:
+            self.scoreFile = open("usersScore//{}.txt".format(self.name), "r+")
+            self.scoreFileLines = self.scoreFile.readlines()
+            for num in self.scoreFileLines:
+                try:
+                    self.score += float(num)
+                except:
+                    logging.debug("Read score failed for user {}".format(self.name))
+            self.scoreFile.close()
+            logging.debug("Successfully loaded score for user {}".format(self.name))
+            logging.debug("{}´s score: {}".format(self.name, self.score))
+        except:
+            logging.debug("Read score failed for user {}".format(self.name))
+            self.scoreFile = open("usersScore//{}.txt".format(self.name), "a")
+            self.scoreFile.write("0")
+            self.scoreFile.close()
+            self.scoreLoad()
     def __init__(self, path, home, adress):
         self.name = ""
         self.adress = adress
@@ -45,6 +64,18 @@ class User():
         self.perrmission = "user"
         self.admin_pass = "neopisuju2018"
         self.acess = False
+        self.score = 0
+        #self.scoreLoad()
+
+    def scoreAdd(self, score):
+        self.score += score
+        try:
+            self.scoreFile = open("usersScore//{}.txt".format(self.name), "w")#"a"
+            self.scoreFile.write(self.score)
+            self.scoreFile.close()
+            logging.debug("{}´s score: {}".format(self.name, self.score))
+        except:
+            logging.debug("Write score failed for user {}".format(self.name))
 
     def cd(self):
         self.pathList2 = self.path.split("/")
@@ -117,7 +148,7 @@ class User():
             isthere = False
             for i in self.directory.content:
                 if i.name == self.argv:
-                    isthere == True
+                    isthere == True #chyba?
             if isthere == False:
                 self.acess = True
             for dir in self.directory.content:
@@ -129,6 +160,10 @@ class User():
                             self.answerToClient = i.show_content()
                     else:
                         self.acess = False
+                if dir.name == "secret_message.txt":
+                    self.scoreAdd(2)
+                if dir.name == "read_me.txt":
+                    self.scoreAdd(1)
             """
             self.answerToClient = "None such file"
             for i in self.directory.content:
@@ -147,6 +182,7 @@ class User():
             if self.argv == self.admin_pass:
                 self.answerToClient = "True"
                 self.perrmission = "admin"
+                self.scoreAdd(3)
             else:
                 self.answerToClient = "False"
 
@@ -181,7 +217,7 @@ class Directory():  # tvorba složky chyba by neměla být tady
         for i in self.content:
             dir += i.name + " "
         if dir == "":
-            dir = "None"
+            dir = "This directory is empty!"#"None"
         return dir
 
 
@@ -286,13 +322,16 @@ def one_user(c, a):
                 #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))
                 #print("{}:{}".format(username, loadTable.pswds[tmpPswd]))
                 if user.name == username and loadTable.pswds[tmpPswd] == user.pswd:
-                    print("True")
+                    #print("True")
                     c.send("True".encode())
                     user.connected = True
+                    user.scoreAdd(1)
+                    user.scoreLoad()
                     #here we must add user to connected users (list)
                     connectedUsers.append(user)
                     connectedUsersNames.append(user.name)
                     print(connectedUsersNames)
+                    break
                 """for username in loadTable.users:
                     if data in username:
                         c.send("True".encode())
@@ -311,6 +350,7 @@ def one_user(c, a):
             #print("action: \"{}\"".format(action))
             #userLog = open("/home/hojang/Users_Logs/"+user.name + "_Log.txt", "a")
             userLog = open("C:\\Users\\buchmaier.jan\\Desktop\\User_Log\\{}_Log.txt".format(user.name), "a")
+            #user.scoreLoad()
             #userLog.write(action+"\n")
             userLog.write("[{}] {}: {}\n".format(time.time(),user.path, action))
             userLog.close()
@@ -326,7 +366,7 @@ def one_user(c, a):
                 user.acess = False
                 user.answerToClient = "None"
                 answ = user.run(action)
-                print(user.acess)
+                print("user.acess: {} ; user.name: {}".format(user.acess, user.name))
                     #if user.acess == True:
                 if user.acess:
                     c.send("True".encode())
