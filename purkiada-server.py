@@ -73,9 +73,9 @@ class User():
             self.scoreFile = open("usersScore//{}.txt".format(self.name), "w")#"a"
             self.scoreFile.write(self.score)
             self.scoreFile.close()
-            logging.debug("{}´s score: {}".format(self.name, self.score))
         except:
             logging.debug("Write score failed for user {}".format(self.name))
+        logging.debug("{}´s score: {}".format(self.name, self.score))
 
     def cd(self):
         self.pathList2 = self.path.split("/")
@@ -117,7 +117,7 @@ class User():
                         self.acess = False
 
     def __str__(self):
-        return self.name
+        return "name: {}, score: {}".format(self.name, self.score)
 
     def use_commands(self):
         try:
@@ -241,7 +241,7 @@ data = Directory("data", acess_list)
 desktop = Directory("desktop", acess_list)
 desktop.add(users)
 message = """       THIS MESSAGE IS FOR NEW MEN IN BLACK ADMIN:
-                        Admin(OLD): If you want to connect to server with passwords
+                        Admin: If you want to connect to server with passwords
                         try ip adress 193.165.214.38 and port 9601
                         If you are a new admin you know password for this server.
                         PS: Do not show this file to other users."""
