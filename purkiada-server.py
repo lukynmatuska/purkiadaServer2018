@@ -11,16 +11,18 @@ import purkiadaServerPanel
 #import dominate as dominate
 #from dominate.tags import *
 
-path = "home/"  # "default" ukazatel kde jsem v jaké složce
+path = "home/"  # "default" ukazatelv jaké jsem složce
 while True:
     try:
-        users_file = open("users.txt", "r+")
+        #users_file = open("users.txt", "r+")
+        users_file = open("usersFromTable.txt", "r+")
         user_names = users_file.readlines()
         users_file.close()
         #print("From users.txt: {}".format(user_names))
         break
     except:
-        users_file = open("users.txt", "w")
+        #users_file = open("users.txt", "w")
+        users_file = open("usersFromTable.txt", "w")
         users_file.write("admin-admin\n")
         users_file.write("user-1234")
         users_file.close()
@@ -316,7 +318,7 @@ def one_user(c, a):
             data = c.recv(1024).decode("utf8")
             user.name = data.split("-")[0]
             user.pswd = data.split("-")[1]
-            print(loadTable)
+            #print("loadTable: {}".format(loadTable))
             for username in loadTable.users:#user_names:
                 tmpPswd = loadTable.users.index(username)
                 #print("{}:{}--{}:{}".format(user.name, user.pswd, user.name == username, tmpPswd == user.pswd))

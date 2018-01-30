@@ -16,7 +16,7 @@ print("           Udelali :                       ")
 for i in udelali:
     print(i)
 print("--------------------------------------------")
-print("           ziskaly heslo admina:            ")
+print("           ziskali heslo admina:            ")
 for i in skoroudelali:
     if i not in udelali:
         print(i)
